@@ -52,9 +52,11 @@ def find_cc(text):
         exp = re.search(exp_pattern2, text)
         if exp:
             exp = re.search(exp_pattern, f"{exp[1]}|{exp[2]}")
+    if not cc or not exp or not luhn(cc[1]):
+        return None
     cvv_pattern = r'(?:^|[^0-9])(\d{{{}}})(?:[^0-9]|$)'.format(len(str(cc_type(cc[1])['cvvMax'])))
     cvv = re.search(cvv_pattern, text)
-    if not cc or not exp or not cvv or not luhn(cc[1]):
+    if not cvv:
         return None
     exp = [exp[1] if exp[1] else exp[4], exp[3] if exp[3] else exp[6]]
     if len(exp[0])==4 or not (exp[0].startswith('0') or exp[0].startswith('1')):
